@@ -80,22 +80,22 @@ const Index: React.FC = () => {
         )}
       </Card>
       <Divider/>
-        <Card title="在线测试">
-          <Form name="invoke" layout="vertical" onFinish={onFinish}>
-            <Form.Item label="请求参数" name="userRequestParams">
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item wrapperCol={{ span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                调用
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
+      <Card title="在线测试">
+        <Form name="invoke" layout="vertical" onFinish={onFinish}>
+          <Form.Item label="请求参数" name="userRequestParams">
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 16 }}>
+            <Button type="primary" htmlType="submit">
+              调用
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
 
-        <Card title="返回结果" loading={invokeLoading}>
-          {invokeRes}
-        </Card>
+      <Card title="返回结果" loading={invokeLoading}>
+        {invokeRes}
+      </Card>
       <Divider/>
     </PageContainer>
   );

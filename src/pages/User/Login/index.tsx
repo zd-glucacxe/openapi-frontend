@@ -20,7 +20,7 @@ import { Alert, message, Tabs } from 'antd';
 import Settings from '../../../../config/defaultSettings';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
-import {userLoginUsingPOST} from "@/services/openapi-backend/userController";
+import { userLoginUsingPOST } from '@/services/openapi-backend/userController';
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -84,7 +84,7 @@ const LoginMessage: React.FC<{
 };
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [userLoginState, setuserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
@@ -118,18 +118,24 @@ const Login: React.FC = () => {
     try {
       // 登录
       const res = await userLoginUsingPOST({
-        ...values
+        ...values,
       });
       if (res.data) {
         const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        // 设置一个延迟100ms的定时器
+        // 定时器触发后，导航重定向URL ，如果没有重定向就导航到根路径
+        setTimeout(() => {
+          history.push(urlParams.get('redirect') || '/');
+        }, 100)
+
+        //更新全局状态，设置用户登录的信息
         setInitialState({
-          loginUser: res.data
+          loginUser: res.data,
         });
+
         return;
       }
       // 如果失败去设置用户错误信息
-
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',

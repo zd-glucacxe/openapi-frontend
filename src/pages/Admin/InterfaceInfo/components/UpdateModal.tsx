@@ -1,4 +1,4 @@
- import {
+import {
   ProColumns, ProTable,
 } from '@ant-design/pro-components';
 import { Modal } from 'antd';
