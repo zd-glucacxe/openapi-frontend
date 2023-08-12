@@ -5,10 +5,13 @@ import {
   listInterfaceInfoByPageUsingGET,
 } from '@/services/openapi-backend/interfaceInfoController';
 
+
+
+
 /**
  * 主页
+ * @constructor
  */
-
 const Index: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState<API.InterfaceInfo[]>([]);
@@ -24,7 +27,7 @@ const Index: React.FC = () => {
       setList(res?.data?.records ?? []);
       setTotal(res?.data?.total ?? 0);
     } catch (error: any) {
-      message.error('加载数据失败，请重试！' + error.message);
+      message.error('请求失败，' + error.message);
     }
     setLoading(false);
   };
@@ -40,18 +43,19 @@ const Index: React.FC = () => {
         loading={loading}
         itemLayout="horizontal"
         dataSource={list}
-        renderItem={(item) =>{
+        renderItem={(item) => {
           const apiLink = `/interface_info/${item.id}`;
-          return <List.Item actions={[<a key={item.id} href={apiLink}>查看</a>]}>
-            <List.Item.Meta
-              title={<a href={apiLink}>{item.name}</a>}
-              description={item.description}
-            />
-          </List.Item>
-        }
-        }
-
+          return (
+            <List.Item actions={[<a key={item.id} href={apiLink}>查看</a>]}>
+              <List.Item.Meta
+                title={<a href={apiLink}>{item.name}</a>}
+                description={item.description}
+              />
+            </List.Item>
+          );
+        }}
         pagination={{
+          // eslint-disable-next-line @typescript-eslint/no-shadow
           showTotal(total: number) {
             return '总数：' + total;
           },

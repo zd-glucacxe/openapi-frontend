@@ -1,21 +1,18 @@
-import {
-  ProColumns, ProTable,
-} from '@ant-design/pro-components';
-import { Modal } from 'antd';
+import {ProColumns, ProTable} from '@ant-design/pro-components';
+import {Modal} from 'antd';
 import React from 'react';
 
 export type Props = {
-  columns: ProColumns<API.InterfaceInfo>[];
+  columns: ProColumns<API.RuleListItem>[];
   onCancel: () => void;
   onSubmit: (values: API.InterfaceInfo) => Promise<void>;
   visible: boolean;
 };
 
-const CreateModal: React.FC<Props> = React.memo((props) => {
-  const { visible, columns, onCancel, onSubmit } = props;
-
+const CreateModal: React.FC<Props> = (props) => {
+  const {visible, columns, onCancel, onSubmit} = props;
   return (
-    <Modal visible={visible}  footer={null} onCancel={() => onCancel?.()}>
+    <Modal visible={visible} footer={null} onCancel={() => onCancel?.()}>
       <ProTable
         type="form"
         columns={columns}
@@ -25,6 +22,6 @@ const CreateModal: React.FC<Props> = React.memo((props) => {
       />
     </Modal>
   );
-});
+};
 
 export default CreateModal;

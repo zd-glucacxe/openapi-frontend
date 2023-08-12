@@ -1,15 +1,3 @@
-import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import {
-  FooterToolbar,
-  PageContainer,
-  ProDescriptions,
-  ProTable,
-} from '@ant-design/pro-components';
-import { FormattedMessage } from '@umijs/max';
-import { Button, Drawer, message } from 'antd';
-import React, { useRef, useState } from 'react';
-
 import {
   addInterfaceInfoUsingPOST,
   deleteInterfaceInfoUsingPOST,
@@ -18,9 +6,24 @@ import {
   onlineInterfaceInfoUsingPOST,
   updateInterfaceInfoUsingPOST,
 } from '@/services/openapi-backend/interfaceInfoController';
-import { SortOrder } from 'antd/lib/table/interface';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import CreateModal from '@/pages/Admin/InterfaceInfo/components/CreateModal';
 import UpdateModal from '@/pages/Admin/InterfaceInfo/components/UpdateModal';
+import { SortOrder } from 'antd/es/table/interface';
+import '@umijs/max';
+import {
+  FooterToolbar,
+  PageContainer,
+  ProDescriptions,
+  ProTable,
+} from '@ant-design/pro-components';
+import {FormattedMessage, useIntl} from '@umijs/max';
+import {Button, Drawer, message} from 'antd';
+import React, {useRef, useState} from 'react';
+
+
+
 
 const TableList: React.FC = () => {
   /**
@@ -48,14 +51,16 @@ const TableList: React.FC = () => {
   const handleAdd = async (fields: API.InterfaceInfo) => {
     const hide = message.loading('正在添加');
     try {
-      await addInterfaceInfoUsingPOST({ ...fields });
+      await addInterfaceInfoUsingPOST({
+        ...fields,
+      });
       hide();
       message.success('创建成功');
       handleModalVisible(false);
       return true;
     } catch (error: any) {
       hide();
-      message.error('创建失败，请重试!');
+      message.error('创建失败，' + error.message);
       return false;
     }
   };
@@ -68,70 +73,24 @@ const TableList: React.FC = () => {
    */
   const handleUpdate = async (fields: API.InterfaceInfo) => {
     if (!currentRow) {
-      return ;
+      return;
     }
-    const hide = message.loading('操作中');
+    const hide = message.loading('修改中');
     try {
       await updateInterfaceInfoUsingPOST({
         id: currentRow.id,
-        ...fields,
+        ...fields
       });
       hide();
-
-      message.success('操作成功！');
+      message.success('操作成功');
       return true;
     } catch (error: any) {
       hide();
-      message.error('配置失败，请重试!' + error.message);
+      message.error('操作失败，' + error.message);
       return false;
     }
   };
 
-  /**
-   *  发布接口
-   *
-   * @param record
-   */
-  const handleOnline = async (record: API.IdRequest) => {
-    const hide = message.loading('发布中');
-    if (!record) return true;
-    try {
-      await onlineInterfaceInfoUsingPOST({
-        id: record.id,
-      });
-      hide();
-      message.success('操作成功！');
-      actionRef.current?.reload();
-      return true;
-    } catch (error: any) {
-      hide();
-      message.error('发布失败，请重试！' + error.message);
-      return false;
-    }
-  };
-
-  /**
-   *  下线接口
-   *
-   * @param record
-   */
-  const handleOffline = async (record: API.IdRequest) => {
-    const hide = message.loading('发布中');
-    if (!record) return true;
-    try {
-      await offlineInterfaceInfoUsingPOST({
-        id: record.id,
-      });
-      hide();
-      message.success('操作成功！');
-      actionRef.current?.reload();
-      return true;
-    } catch (error: any) {
-      hide();
-      message.error('发布失败，请重试！' + error.message);
-      return false;
-    }
-  };
 
   /**
    *  Delete node
@@ -144,41 +103,89 @@ const TableList: React.FC = () => {
     if (!record) return true;
     try {
       await deleteInterfaceInfoUsingPOST({
-        id: record.id,
+        id: record.id
       });
       hide();
-      message.success('删除成功！');
+      message.success('删除成功');
       actionRef.current?.reload();
       return true;
     } catch (error: any) {
       hide();
-      message.error('删除失败，请重试！' + error.message);
+      message.error('删除失败，' + error.message);
       return false;
     }
   };
 
   /**
+   * 发布接口
+   *
+   * @param record
+   */
+  const handleOnline = async (record: API.IdRequest) => {
+    const hide = message.loading('发布中');
+    if (!record) return true;
+    try {
+      await onlineInterfaceInfoUsingPOST({
+        id: record.id
+      });
+      hide();
+      message.success('操作成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('操作失败，' + error.message);
+      return false;
+    }
+  };
+
+  /**
+   * 下线接口
+   *
+   * @param record
+   */
+  const handleOffline = async (record: API.IdRequest) => {
+    const hide = message.loading('发布中');
+    if (!record) return true;
+    try {
+      await offlineInterfaceInfoUsingPOST({
+        id: record.id
+      });
+      hide();
+      message.success('操作成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('操作失败，' + error.message);
+      return false;
+    }
+  };
+
+
+  /**
    * @en-US International configuration
    * @zh-CN 国际化配置
    * */
+  const intl = useIntl();
 
   const columns: ProColumns<API.InterfaceInfo>[] = [
+
     {
       title: 'id',
       dataIndex: 'id',
       valueType: 'index',
     },
+
     {
       title: '接口名称',
       dataIndex: 'name',
       valueType: 'text',
       formItemProps: {
-        rules: [
-          {
-            required: true,
-          },
-        ],
-      },
+        rules: [{
+          required: true,
+        }]
+      }
     },
     {
       title: '描述',
@@ -229,14 +236,15 @@ const TableList: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       valueType: 'dateTime',
-      hideInForm: true,
+      hideInForm: true
     },
     {
       title: '更新时间',
       dataIndex: 'updateTime',
       valueType: 'dateTime',
-      hideInForm: true,
+      hideInForm: true
     },
+    //操作
     {
       title: '操作',
       dataIndex: 'option',
@@ -251,33 +259,29 @@ const TableList: React.FC = () => {
         >
           修改
         </a>,
-        record.status === 0 ? (
-          <a
-            key="config"
-            onClick={() => {
-              handleOnline(record);
-            }}
-          >
-            发布
-          </a>
-        ) : null,
-        record.status === 1 ? (
-          <Button
-            type="text"
-            key="config"
-            danger
-            onClick={() => {
-              handleOffline(record);
-            }}
-          >
-            下线
-          </Button>
-        ) : null,
-
+        record.status === 0 ? <Button
+          key="online"
+          type="text"
+          onClick={() => {
+            handleOnline(record);
+          }}
+        >
+          发布
+        </Button> : null,
+        record.status === 1 ? <Button
+          key="offline"
+          type="text"
+          danger
+          onClick={() => {
+            handleOffline(record);
+          }}
+        >
+          下线
+        </Button> : null,
         <Button
           type="text"
           danger
-          key="config"
+          key="delete"
           onClick={() => {
             handleRemove(record);
           }}
@@ -287,10 +291,14 @@ const TableList: React.FC = () => {
       ],
     },
   ];
+
   return (
     <PageContainer>
       <ProTable<API.RuleListItem, API.PageParams>
-        headerTitle={'查询表格'}
+        headerTitle={intl.formatMessage({
+          id: 'pages.searchTable.title',
+          defaultMessage: 'Enquiry form',
+        })}
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -304,27 +312,22 @@ const TableList: React.FC = () => {
               handleModalVisible(true);
             }}
           >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
+            <PlusOutlined/> 新建
           </Button>,
         ]}
         request={async (
-          params: U & {
-            pageSize?: number;
-            current?: number;
-            keyword?: string;
-          },
+          params,
           sort: Record<string, SortOrder>,
           filter: Record<string, React.ReactText[] | null>,
         ) => {
           const res: any = await listInterfaceInfoByPageUsingGET({
             ...params,
           });
-          console.log(res);
           if (res?.data) {
             return {
-              data: res.data.records || [],
+              data: res?.data.records || [],
               success: true,
-              total: res.total || 0,
+              total: res?.data.total || 0,
             };
           } else {
             return {
@@ -334,10 +337,6 @@ const TableList: React.FC = () => {
             };
           }
         }}
-        // pagination={{
-        //   pageSize: 15,
-        // }}
-
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -349,9 +348,9 @@ const TableList: React.FC = () => {
         <FooterToolbar
           extra={
             <div>
-              <FormattedMessage id="pages.searchTable.chosen" defaultMessage="Chosen" />{' '}
-              <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
-              <FormattedMessage id="pages.searchTable.item" defaultMessage="项" />
+              <FormattedMessage id="pages.searchTable.chosen" defaultMessage="Chosen"/>{' '}
+              <a style={{fontWeight: 600}}>{selectedRowsState.length}</a>{' '}
+              <FormattedMessage id="pages.searchTable.item" defaultMessage="项"/>
               &nbsp;&nbsp;
               <span>
                 <FormattedMessage
@@ -359,7 +358,7 @@ const TableList: React.FC = () => {
                   defaultMessage="Total number of service calls"
                 />{' '}
                 {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)}{' '}
-                <FormattedMessage id="pages.searchTable.tenThousand" defaultMessage="万" />
+                <FormattedMessage id="pages.searchTable.tenThousand" defaultMessage="万"/>
               </span>
             </div>
           }
@@ -407,7 +406,6 @@ const TableList: React.FC = () => {
         values={currentRow || {}}
       />
 
-
       <Drawer
         width={600}
         open={showDetail}
@@ -431,18 +429,14 @@ const TableList: React.FC = () => {
           />
         )}
       </Drawer>
-      <CreateModal
-        columns={columns}
-        onCancel={() => {
-          handleModalVisible(false);
-        }}
-        onSubmit={(values) => {
-          handleAdd(values);
-        }}
-        visible={createModalVisible}
-      />
+      <CreateModal columns={columns} onCancel={() => {
+        handleModalVisible(false)
+      }} onSubmit={(values) => {
+        handleAdd(values)
+      }} visible={createModalVisible}/>
     </PageContainer>
   );
 };
 
 export default TableList;
+
