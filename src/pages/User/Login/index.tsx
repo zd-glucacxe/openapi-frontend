@@ -20,6 +20,7 @@ import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { userLoginUsingPOST } from '@/services/openapi-backend/userController';
 import {Link} from "@@/exports";
+import {AKU_WEB, SYSTEM_LOGO} from "@/constants";
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -169,9 +170,15 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+          logo={<img alt="logo" src={SYSTEM_LOGO}/>}
+          title="OpenAPI平台"
+          subTitle={
+            <>
+              <p>
+                <a href={AKU_WEB} target={"_blank"} rel="noreferrer">Power by akuStudent-glucacxe</a>
+              </p>
+            </>
+          }
           initialValues={{
             autoLogin: true,
           }}
@@ -265,7 +272,7 @@ const Login: React.FC = () => {
             }}
           >
             <ProFormCheckbox noStyle name="autoLogin">
-              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+              <FormattedMessage id="pages.login.RememberPassword" defaultMessage="记住密码" />
             </ProFormCheckbox>
             <Link
               style={{

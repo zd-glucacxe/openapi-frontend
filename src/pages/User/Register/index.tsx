@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { Link } from '@@/exports';
 import { userRegisterUsingPOST } from '@/services/openapi-backend/userController';
 import {c} from "@umijs/utils/compiled/tar";
+import {AKU_WEB, SYSTEM_LOGO} from "@/constants";
 
 const LoginMessage: React.FC<{
   content: string;
@@ -69,14 +70,15 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Api接口开放平台"
+          logo={<img alt="logo" src={SYSTEM_LOGO}/>}
+          title="OpenAPI平台"
           submitter={{
             searchConfig: {
               submitText: '注册',
             },
           }}
-          subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+          // subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+          subTitle={<a href={AKU_WEB} target={"_blank"} rel="noreferrer">Power by akuStudent-glucacxe</a>}
           initialValues={{
             autoLogin: true,
           }}

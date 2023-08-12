@@ -59,7 +59,11 @@ const Index: React.FC = () => {
 
 // 天气
     if (Number(params.id) === 5) {
-      param.city = '';
+    }
+
+    // 百度
+    if (Number(params.id) === 6) {
+      param.size = '10';
     }
 
 
